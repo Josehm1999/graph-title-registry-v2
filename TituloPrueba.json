@@ -1,0 +1,27 @@
+{
+  "name": "TituloPrueba",
+  "description": "Titulo de prueba",
+  "filetype": "pdf",
+  "image": "ipfs://bafybeidp7tev43peswwryfu6m77jp4la7qzyqwdoma4dcoxvrmribvch5u",
+  "files": {
+    "ANOTACION_INSCRIPCION": "ipfs://bafybeih6qsgthd3vsu4tvhb34j5akezcammhp54imd2kupqaduw6sowuoa",
+    "REGISTRO_PROPIEDAD": "ipfs://bafybeidy2zq5ka4f32oqksejcr7z2bwfl4rly7qnqgbmvphznsophkxdhu"
+  },
+  "landDetails": {
+    "department": "Lima",
+    "district": "Chorrillos",
+    "city": "Lima",
+    "surveyNumber": "2021-01456989",
+    "CurrentOwner": {
+      "owner1": "GILBERTO OROZCO CATRO",
+      "owner2": "MARIA FLORINDA MAIZONDO CACERES DE OROZCO"
+    },
+    "marketValue": {
+      "ETH": 8.11,
+      "PEN": 42000
+    },
+    "isAvailable": true,
+    "requester": "MARISOL CHAHUA QUISPE",
+    "requestStatus": "Pending"
+  }
+}

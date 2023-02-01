@@ -1,0 +1,31 @@
+type ActiveTitle @entity {
+	id: ID!
+	buyer: Bytes! #Address
+	seller: Bytes!
+	titleAddress: Bytes!
+	tokenId: BigInt!
+	price: BigInt
+}
+
+type TitleListed @entity {
+	id: ID!
+	seller: Bytes!
+	titleAddress: Bytes!
+	tokenId: BigInt!
+	price: BigInt
+}
+
+type TitleCanceled @entity {
+	id: ID!
+	seller: Bytes!
+	titleAddress: Bytes!
+	tokenId: BigInt!
+}
+
+type TitleBought @entity {
+	id: ID!
+	buyer: Bytes!
+	titleAddress: Bytes!
+	tokenId: BigInt!
+	price: BigInt
+}
