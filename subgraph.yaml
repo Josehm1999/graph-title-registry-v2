@@ -3,28 +3,39 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: TitleRegistry
+    name: titleRegistryV2
     network: mainnet
     source:
       address: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
-      abi: TitleRegistry
-      # startBlock: 7858460
+      abi: titleRegistryV2
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - TitleBought
-        - TitleCanceled
-        - TitleListed
+        - PropertyBought
+        - PropertyChangedAvailability
+        - PropertyListed
+        - PropertyStatusChanged
+        - RegionalAdminCreated
+        - TransactionCanceled
+        - TransferSuccess
       abis:
-        - name: TitleRegistry
-          file: ./abis/TitleRegistry.json
+        - name: titleRegistryV2
+          file: ./abis/titleRegistryV2.json
       eventHandlers:
-        - event: TitleBought(indexed address,indexed address,indexed uint256,uint256)
-          handler: handleTitleBought
-        - event: TitleCanceled(indexed address,indexed address,indexed uint256)
-          handler: handleTitleCanceled
-        - event: TitleListed(indexed address,indexed address,indexed uint256,uint256)
-          handler: handleTitleListed
-      file: ./src/mappings.ts
+        - event: PropertyBought(indexed address,indexed uint256,uint256)
+          handler: handlePropertyBought
+        - event: PropertyChangedAvailability(indexed uint256)
+          handler: handlePropertyChangedAvailability
+        - event: PropertyListed(indexed address,indexed uint256,uint256)
+          handler: handlePropertyListed
+        - event: PropertyStatusChanged(indexed uint256,uint8)
+          handler: handlePropertyStatusChanged
+        - event: RegionalAdminCreated(indexed address,string)
+          handler: handleRegionalAdminCreated
+        - event: TransactionCanceled(indexed address,indexed uint256)
+          handler: handleTransactionCanceled
+        - event: TransferSuccess()
+          handler: handleTransferSuccess
+      file: ./src/title-registry-v-2.ts

@@ -8,9 +8,9 @@ import {
 } from "matchstick-as/assembly/index"
 import { Address, BigInt } from "@graphprotocol/graph-ts"
 import { ExampleEntity } from "../generated/schema"
-import { TitleBought } from "../generated/TitleRegistry/TitleRegistry"
-import { handleTitleBought } from "../src/title-registry"
-import { createTitleBoughtEvent } from "./title-registry-utils"
+import { PropertyBought } from "../generated/titleRegistryV2/titleRegistryV2"
+import { handlePropertyBought } from "../src/title-registry-v-2"
+import { createPropertyBoughtEvent } from "./title-registry-v-2-utils"
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
@@ -18,18 +18,14 @@ import { createTitleBoughtEvent } from "./title-registry-utils"
 describe("Describe entity assertions", () => {
   beforeAll(() => {
     let buyer = Address.fromString("0x0000000000000000000000000000000000000001")
-    let titleAddress = Address.fromString(
-      "0x0000000000000000000000000000000000000001"
-    )
-    let titleId = BigInt.fromI32(234)
+    let surveyNumber = BigInt.fromI32(234)
     let price = BigInt.fromI32(234)
-    let newTitleBoughtEvent = createTitleBoughtEvent(
+    let newPropertyBoughtEvent = createPropertyBoughtEvent(
       buyer,
-      titleAddress,
-      titleId,
+      surveyNumber,
       price
     )
-    handleTitleBought(newTitleBoughtEvent)
+    handlePropertyBought(newPropertyBoughtEvent)
   })
 
   afterAll(() => {
@@ -52,13 +48,7 @@ describe("Describe entity assertions", () => {
     assert.fieldEquals(
       "ExampleEntity",
       "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
-      "titleAddress",
-      "0x0000000000000000000000000000000000000001"
-    )
-    assert.fieldEquals(
-      "ExampleEntity",
-      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a",
-      "titleId",
+      "surveyNumber",
       "234"
     )
     assert.fieldEquals(

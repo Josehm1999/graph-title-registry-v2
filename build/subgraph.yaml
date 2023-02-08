@@ -3,27 +3,39 @@ schema:
   file: schema.graphql
 dataSources:
   - kind: ethereum
-    name: TitleRegistry
+    name: titleRegistryV2
     network: mainnet
     source:
-      address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
-      abi: TitleRegistry
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+      abi: titleRegistryV2
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - TitleBought
-        - TitleCanceled
-        - TitleListed
+        - PropertyBought
+        - PropertyChangedAvailability
+        - PropertyListed
+        - PropertyStatusChanged
+        - RegionalAdminCreated
+        - TransactionCanceled
+        - TransferSuccess
       abis:
-        - name: TitleRegistry
-          file: TitleRegistry/abis/TitleRegistry.json
+        - name: titleRegistryV2
+          file: titleRegistryV2/abis/titleRegistryV2.json
       eventHandlers:
-        - event: TitleBought(indexed address,indexed address,indexed uint256,uint256)
-          handler: handleTitleBought
-        - event: TitleCanceled(indexed address,indexed address,indexed uint256)
-          handler: handleTitleCanceled
-        - event: TitleListed(indexed address,indexed address,indexed uint256,uint256)
-          handler: handleTitleListed
-      file: TitleRegistry/TitleRegistry.wasm
+        - event: PropertyBought(indexed address,indexed uint256,uint256)
+          handler: handlePropertyBought
+        - event: PropertyChangedAvailability(indexed uint256)
+          handler: handlePropertyChangedAvailability
+        - event: PropertyListed(indexed address,indexed uint256,uint256)
+          handler: handlePropertyListed
+        - event: PropertyStatusChanged(indexed uint256,uint8)
+          handler: handlePropertyStatusChanged
+        - event: RegionalAdminCreated(indexed address,string)
+          handler: handleRegionalAdminCreated
+        - event: TransactionCanceled(indexed address,indexed uint256)
+          handler: handleTransactionCanceled
+        - event: TransferSuccess()
+          handler: handleTransferSuccess
+      file: titleRegistryV2/titleRegistryV2.wasm

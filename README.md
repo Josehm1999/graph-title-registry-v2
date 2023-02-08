@@ -1,1 +1,0 @@
-# graph-title-registry-app

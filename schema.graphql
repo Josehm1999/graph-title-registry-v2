@@ -1,31 +1,61 @@
-type ActiveTitle @entity {
-	id: ID!
-	buyer: Bytes! #Address
-	seller: Bytes!
-	titleAddress: Bytes!
-	tokenId: BigInt!
-	price: BigInt
+enum ReqStatus {
+  DEFAULT
+  PENDING
+  REJECTED
+  APPROVED
 }
 
-type TitleListed @entity {
-	id: ID!
-	seller: Bytes!
-	titleAddress: Bytes!
-	tokenId: BigInt!
-	price: BigInt
+type RegisteredProperty @entity {
+  id: ID!
+  state: String!
+  district: String!
+  neighborhood: String!
+  surveyNumber: Int!
+  currentOwner: Bytes!
+  marketValue: BigInt!
+  isAvailable: Boolean!
+  requester: Bytes!
+  ReqStatus: [ReqStatus!]!
 }
 
-type TitleCanceled @entity {
-	id: ID!
-	seller: Bytes!
-	titleAddress: Bytes!
-	tokenId: BigInt!
+type PropertyListed @entity {
+  id: ID!
+  seller: Bytes!
+  surveyNumber: Int!
+  price: BigInt!
 }
 
-type TitleBought @entity {
-	id: ID!
-	buyer: Bytes!
-	titleAddress: Bytes!
-	tokenId: BigInt!
-	price: BigInt
+type PropertyBought @entity {
+  id: ID!
+  buyer: Bytes!
+  surveyNumber: Int!
+  price: BigInt!
+}
+
+type PropertyStatusChanged @entity {
+  id: ID!
+  surveyNumber: Int!
+  ReqStatus: [ReqStatus!]!
+}
+
+type PropertyChangedAvailability @entity {
+  id: ID!
+  surveyNumber: Int!
+}
+
+type TransactionCanceled @entity {
+  id: ID!
+  seller: Bytes!
+  surveyNumber: Int!
+}
+
+type TransferSuccess @entity {
+  id: ID!
+  account: Bytes!
+}
+
+type RegionalAdminCreated @entity {
+  id: ID!
+  regionalAdmin: Bytes!
+  district: String!
 }
