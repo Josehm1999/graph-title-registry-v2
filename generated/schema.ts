@@ -11,7 +11,7 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class RegisteredProperty extends Entity {
+export class AvailableProperty extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -19,20 +19,96 @@ export class RegisteredProperty extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save RegisteredProperty entity without an ID");
+    assert(id != null, "Cannot save AvailableProperty entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type RegisteredProperty must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type AvailableProperty must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("RegisteredProperty", id.toString(), this);
+      store.set("AvailableProperty", id.toString(), this);
     }
   }
 
-  static load(id: string): RegisteredProperty | null {
-    return changetype<RegisteredProperty | null>(
-      store.get("RegisteredProperty", id)
+  static load(id: string): AvailableProperty | null {
+    return changetype<AvailableProperty | null>(
+      store.get("AvailableProperty", id)
     );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get surveyNumber(): BigInt {
+    let value = this.get("surveyNumber");
+    return value!.toBigInt();
+  }
+
+  set surveyNumber(value: BigInt) {
+    this.set("surveyNumber", Value.fromBigInt(value));
+  }
+
+  get seller(): Bytes {
+    let value = this.get("seller");
+    return value!.toBytes();
+  }
+
+  set seller(value: Bytes) {
+    this.set("seller", Value.fromBytes(value));
+  }
+
+  get buyer(): Bytes {
+    let value = this.get("buyer");
+    return value!.toBytes();
+  }
+
+  set buyer(value: Bytes) {
+    this.set("buyer", Value.fromBytes(value));
+  }
+
+  get marketValue(): BigInt | null {
+    let value = this.get("marketValue");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set marketValue(value: BigInt | null) {
+    if (!value) {
+      this.unset("marketValue");
+    } else {
+      this.set("marketValue", Value.fromBigInt(<BigInt>value));
+    }
+  }
+}
+
+export class PropertyListed extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save PropertyListed entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type PropertyListed must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("PropertyListed", id.toString(), this);
+    }
+  }
+
+  static load(id: string): PropertyListed | null {
+    return changetype<PropertyListed | null>(store.get("PropertyListed", id));
   }
 
   get id(): string {
@@ -71,22 +147,22 @@ export class RegisteredProperty extends Entity {
     this.set("neighborhood", Value.fromString(value));
   }
 
-  get surveyNumber(): i32 {
+  get surveyNumber(): BigInt {
     let value = this.get("surveyNumber");
-    return value!.toI32();
+    return value!.toBigInt();
   }
 
-  set surveyNumber(value: i32) {
-    this.set("surveyNumber", Value.fromI32(value));
+  set surveyNumber(value: BigInt) {
+    this.set("surveyNumber", Value.fromBigInt(value));
   }
 
-  get currentOwner(): Bytes {
-    let value = this.get("currentOwner");
+  get seller(): Bytes {
+    let value = this.get("seller");
     return value!.toBytes();
   }
 
-  set currentOwner(value: Bytes) {
-    this.set("currentOwner", Value.fromBytes(value));
+  set seller(value: Bytes) {
+    this.set("seller", Value.fromBytes(value));
   }
 
   get marketValue(): BigInt {
@@ -107,15 +183,6 @@ export class RegisteredProperty extends Entity {
     this.set("isAvailable", Value.fromBoolean(value));
   }
 
-  get requester(): Bytes {
-    let value = this.get("requester");
-    return value!.toBytes();
-  }
-
-  set requester(value: Bytes) {
-    this.set("requester", Value.fromBytes(value));
-  }
-
   get ReqStatus(): Array<string> {
     let value = this.get("ReqStatus");
     return value!.toStringArray();
@@ -123,65 +190,6 @@ export class RegisteredProperty extends Entity {
 
   set ReqStatus(value: Array<string>) {
     this.set("ReqStatus", Value.fromStringArray(value));
-  }
-}
-
-export class PropertyListed extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save PropertyListed entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type PropertyListed must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("PropertyListed", id.toString(), this);
-    }
-  }
-
-  static load(id: string): PropertyListed | null {
-    return changetype<PropertyListed | null>(store.get("PropertyListed", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get seller(): Bytes {
-    let value = this.get("seller");
-    return value!.toBytes();
-  }
-
-  set seller(value: Bytes) {
-    this.set("seller", Value.fromBytes(value));
-  }
-
-  get surveyNumber(): i32 {
-    let value = this.get("surveyNumber");
-    return value!.toI32();
-  }
-
-  set surveyNumber(value: i32) {
-    this.set("surveyNumber", Value.fromI32(value));
-  }
-
-  get price(): BigInt {
-    let value = this.get("price");
-    return value!.toBigInt();
-  }
-
-  set price(value: BigInt) {
-    this.set("price", Value.fromBigInt(value));
   }
 }
 
@@ -225,26 +233,26 @@ export class PropertyBought extends Entity {
     this.set("buyer", Value.fromBytes(value));
   }
 
-  get surveyNumber(): i32 {
+  get surveyNumber(): BigInt {
     let value = this.get("surveyNumber");
-    return value!.toI32();
-  }
-
-  set surveyNumber(value: i32) {
-    this.set("surveyNumber", Value.fromI32(value));
-  }
-
-  get price(): BigInt {
-    let value = this.get("price");
     return value!.toBigInt();
   }
 
-  set price(value: BigInt) {
-    this.set("price", Value.fromBigInt(value));
+  set surveyNumber(value: BigInt) {
+    this.set("surveyNumber", Value.fromBigInt(value));
+  }
+
+  get marketValue(): BigInt {
+    let value = this.get("marketValue");
+    return value!.toBigInt();
+  }
+
+  set marketValue(value: BigInt) {
+    this.set("marketValue", Value.fromBigInt(value));
   }
 }
 
-export class PropertyStatusChanged extends Entity {
+export class PropertyRequestStatusChanged extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -254,20 +262,20 @@ export class PropertyStatusChanged extends Entity {
     let id = this.get("id");
     assert(
       id != null,
-      "Cannot save PropertyStatusChanged entity without an ID"
+      "Cannot save PropertyRequestStatusChanged entity without an ID"
     );
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type PropertyStatusChanged must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type PropertyRequestStatusChanged must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("PropertyStatusChanged", id.toString(), this);
+      store.set("PropertyRequestStatusChanged", id.toString(), this);
     }
   }
 
-  static load(id: string): PropertyStatusChanged | null {
-    return changetype<PropertyStatusChanged | null>(
-      store.get("PropertyStatusChanged", id)
+  static load(id: string): PropertyRequestStatusChanged | null {
+    return changetype<PropertyRequestStatusChanged | null>(
+      store.get("PropertyRequestStatusChanged", id)
     );
   }
 
@@ -280,13 +288,13 @@ export class PropertyStatusChanged extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get surveyNumber(): i32 {
+  get surveyNumber(): BigInt {
     let value = this.get("surveyNumber");
-    return value!.toI32();
+    return value!.toBigInt();
   }
 
-  set surveyNumber(value: i32) {
-    this.set("surveyNumber", Value.fromI32(value));
+  set surveyNumber(value: BigInt) {
+    this.set("surveyNumber", Value.fromBigInt(value));
   }
 
   get ReqStatus(): Array<string> {
@@ -335,13 +343,22 @@ export class PropertyChangedAvailability extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get surveyNumber(): i32 {
+  get surveyNumber(): BigInt {
     let value = this.get("surveyNumber");
-    return value!.toI32();
+    return value!.toBigInt();
   }
 
-  set surveyNumber(value: i32) {
-    this.set("surveyNumber", Value.fromI32(value));
+  set surveyNumber(value: BigInt) {
+    this.set("surveyNumber", Value.fromBigInt(value));
+  }
+
+  get isAvailable(): boolean {
+    let value = this.get("isAvailable");
+    return value!.toBoolean();
+  }
+
+  set isAvailable(value: boolean) {
+    this.set("isAvailable", Value.fromBoolean(value));
   }
 }
 
@@ -387,54 +404,13 @@ export class TransactionCanceled extends Entity {
     this.set("seller", Value.fromBytes(value));
   }
 
-  get surveyNumber(): i32 {
+  get surveyNumber(): BigInt {
     let value = this.get("surveyNumber");
-    return value!.toI32();
+    return value!.toBigInt();
   }
 
-  set surveyNumber(value: i32) {
-    this.set("surveyNumber", Value.fromI32(value));
-  }
-}
-
-export class TransferSuccess extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save TransferSuccess entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type TransferSuccess must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("TransferSuccess", id.toString(), this);
-    }
-  }
-
-  static load(id: string): TransferSuccess | null {
-    return changetype<TransferSuccess | null>(store.get("TransferSuccess", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get account(): Bytes {
-    let value = this.get("account");
-    return value!.toBytes();
-  }
-
-  set account(value: Bytes) {
-    this.set("account", Value.fromBytes(value));
+  set surveyNumber(value: BigInt) {
+    this.set("surveyNumber", Value.fromBigInt(value));
   }
 }
 

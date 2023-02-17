@@ -5,53 +5,49 @@ enum ReqStatus {
   APPROVED
 }
 
-type RegisteredProperty @entity {
+type AvailableProperty @entity {
   id: ID!
-  state: String!
-  district: String!
-  neighborhood: String!
-  surveyNumber: Int!
-  currentOwner: Bytes!
-  marketValue: BigInt!
-  isAvailable: Boolean!
-  requester: Bytes!
-  ReqStatus: [ReqStatus!]!
+  surveyNumber: BigInt!
+  seller: Bytes!
+  buyer: Bytes!
+  marketValue: BigInt
 }
 
 type PropertyListed @entity {
   id: ID!
+  state: String!
+  district: String!
+  neighborhood: String!
+  surveyNumber: BigInt!
   seller: Bytes!
-  surveyNumber: Int!
-  price: BigInt!
+  marketValue: BigInt!
+  isAvailable: Boolean!
+  ReqStatus: [ReqStatus!]!
 }
 
 type PropertyBought @entity {
   id: ID!
   buyer: Bytes!
-  surveyNumber: Int!
-  price: BigInt!
+  surveyNumber: BigInt!
+  marketValue: BigInt!
 }
 
-type PropertyStatusChanged @entity {
+type PropertyRequestStatusChanged @entity {
   id: ID!
-  surveyNumber: Int!
+  surveyNumber: BigInt!
   ReqStatus: [ReqStatus!]!
 }
 
 type PropertyChangedAvailability @entity {
   id: ID!
-  surveyNumber: Int!
+  surveyNumber: BigInt!
+  isAvailable: Boolean!
 }
 
 type TransactionCanceled @entity {
   id: ID!
   seller: Bytes!
-  surveyNumber: Int!
-}
-
-type TransferSuccess @entity {
-  id: ID!
-  account: Bytes!
+  surveyNumber: BigInt!
 }
 
 type RegionalAdminCreated @entity {
