@@ -1,10 +1,9 @@
 import { Address, BigInt } from '@graphprotocol/graph-ts';
 import {
-  titleRegistryV2,
   PropertyBought as PropertyBoughtEvent,
   PropertyChangedAvailability as PropertyChangedAvailabilityEvent,
   PropertyListed as PropertyListedEvent,
-  PropertyStatusChanged as PropertyStatusChangedEvent,
+  PropertyRequestStatusChanged as PropertyRequestStatusChangedEvent,
   RegionalAdminCreated as RegionalAdminCreatedEvent,
   TransactionCanceled as TransactionCanceledEvent,
   TransferSuccess as TransferSuccessEvent
@@ -74,15 +73,26 @@ export function handlePropertyListed(event: PropertyListedEvent): void {
 }
 
 export function handlePropertyStatusChanged(
-  event: PropertyStatusChangedEvent
+  event: PropertyRequestStatusChangedEvent
 ): void {
   let property_status_change = PropertyRequestStatusChanged.load(
     getIdFromEventParamsWithNumbers(
       event.params.surveyNumber,
-      event.params.param1
+      event.params.seller
     )
   );
 
+  if (!property_status_change) {
+    property_status_change = new PropertyRequestStatusChanged(
+      getIdFromEventParams(event.params.surveyNumber, event.params.seller)
+    );
+
+  }
+  let propertyListed = PropertyListed.load(
+      getIdFromEventParams(event.params.surveyNumber, event.params.seller)
+  )
+
+  propertyListed!.ReqStatus = event.params.param1;
 }
 
 export function handleRegionalAdminCreated(
