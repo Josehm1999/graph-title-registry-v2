@@ -5,8 +5,7 @@ import {
   PropertyListed as PropertyListedEvent,
   PropertyRequestStatusChanged as PropertyRequestStatusChangedEvent,
   RegionalAdminCreated as RegionalAdminCreatedEvent,
-  TransactionCanceled as TransactionCanceledEvent,
-  TransferSuccess as TransferSuccessEvent
+  TransactionCanceled as TransactionCanceledEvent
 } from '../generated/titleRegistryV2/titleRegistryV2';
 import {
   PropertyBought,
@@ -49,50 +48,47 @@ export function handlePropertyListed(event: PropertyListedEvent): void {
     getIdFromEventParams(event.params.surveyNumber, event.params.seller)
   );
 
-  let availableProperty = AvailableProperty.load(
-    getIdFromEventParams(event.params.surveyNumber, event.params.seller)
-  );
-
   if (!propertyListed) {
     propertyListed = new PropertyListed(
       getIdFromEventParams(event.params.surveyNumber, event.params.seller)
     );
   }
 
-  if (!availableProperty) {
-    availableProperty = new AvailableProperty(
-      getIdFromEventParams(event.params.surveyNumber, event.params.seller)
-    );
-  }
-
   propertyListed.seller = event.params.seller;
-  availableProperty.seller = event.params.seller;
-
   propertyListed.surveyNumber = event.params.surveyNumber;
-  availableProperty.surveyNumber = event.params.surveyNumber;
+  propertyListed.state = event.params.state;
+  propertyListed.district = event.params.district;
+  propertyListed.neighborhood = event.params.neighborhood;
+  propertyListed.marketValue = event.params.marketValue;
+  propertyListed.isAvailable = event.params.isAvailable;
+  propertyListed.save();
 }
 
 export function handlePropertyStatusChanged(
   event: PropertyRequestStatusChangedEvent
 ): void {
   let property_status_change = PropertyRequestStatusChanged.load(
-    getIdFromEventParamsWithNumbers(
-      event.params.surveyNumber,
-      event.params.seller
-    )
+    getIdFromEventParams(event.params.surveyNumber, event.params.seller)
   );
 
   if (!property_status_change) {
     property_status_change = new PropertyRequestStatusChanged(
       getIdFromEventParams(event.params.surveyNumber, event.params.seller)
     );
-
   }
-  let propertyListed = PropertyListed.load(
-      getIdFromEventParams(event.params.surveyNumber, event.params.seller)
-  )
 
-  propertyListed!.ReqStatus = event.params.param1;
+  let propertyListed = PropertyListed.load(
+    getIdFromEventParams(event.params.surveyNumber, event.params.seller)
+  );
+
+  let propertyAvailable = AvailableProperty.load(
+    getIdFromEventParams(event.params.surveyNumber, event.params.seller)
+  );
+
+  propertyListed!.ReqStatus = event.params.param2;
+  if (propertyAvailable) {
+    propertyAvailable!.ReqStatus = event.params.param2;
+  }
 }
 
 export function handleRegionalAdminCreated(
@@ -113,6 +109,10 @@ export function handleRegionalAdminCreated(
       )
     );
   }
+
+  new_regional_admin.district = event.params.district;
+  new_regional_admin.regionalAdmin = event.params.regionalAdmin;
+  new_regional_admin.save();
 }
 
 export function handleTransactionCanceled(
@@ -134,9 +134,7 @@ export function handleTransactionCanceled(
 
   transactionCanceled.seller = event.params.seller;
   transactionCanceled.surveyNumber = event.params.surveyNumber;
-  availableProperty!.buyer = Address.fromString(
-    '0x000000000000000000000000000000000000dEaD'
-  );
+  availableProperty!.ReqStatus = 0; //DEFAULT STATUS
 }
 
 function getIdFromEventParamsWithNumbers(

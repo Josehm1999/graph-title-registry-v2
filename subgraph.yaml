@@ -6,7 +6,7 @@ dataSources:
     name: titleRegistryV2
     network: mainnet
     source:
-      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+      address: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
       abi: titleRegistryV2
     mapping:
       kind: ethereum/events
@@ -16,26 +16,23 @@ dataSources:
         - PropertyBought
         - PropertyChangedAvailability
         - PropertyListed
-        - PropertyStatusChanged
+        - PropertyRequestStatusChanged
         - RegionalAdminCreated
         - TransactionCanceled
-        - TransferSuccess
       abis:
         - name: titleRegistryV2
           file: ./abis/titleRegistryV2.json
       eventHandlers:
         - event: PropertyBought(indexed address,indexed uint256,uint256)
           handler: handlePropertyBought
-        - event: PropertyChangedAvailability(indexed uint256)
+        - event: PropertyChangedAvailability(indexed uint256,indexed address,bool)
           handler: handlePropertyChangedAvailability
-        - event: PropertyListed(indexed address,indexed uint256,uint256)
+        - event: PropertyListed(string,string,string,indexed uint256,indexed address,uint256,bool,uint8)
           handler: handlePropertyListed
-        - event: PropertyStatusChanged(indexed uint256,uint8)
+        - event: PropertyRequestStatusChanged(indexed uint256,indexed address,uint8)
           handler: handlePropertyStatusChanged
         - event: RegionalAdminCreated(indexed address,string)
           handler: handleRegionalAdminCreated
-        - event: TransactionCanceled(indexed address,indexed uint256)
+        - event: TransactionCanceled(indexed uint256,indexed address)
           handler: handleTransactionCanceled
-        - event: TransferSuccess()
-          handler: handleTransferSuccess
       file: ./src/title-registry-v-2.ts

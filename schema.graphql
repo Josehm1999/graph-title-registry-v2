@@ -4,6 +4,7 @@ type AvailableProperty @entity {
   seller: Bytes!
   buyer: Bytes!
   marketValue: BigInt
+  ReqStatus: Int!
 }
 
 type PropertyListed @entity {
@@ -41,8 +42,8 @@ type PropertyChangedAvailability @entity {
 
 type TransactionCanceled @entity {
   id: ID!
-  seller: Bytes!
   surveyNumber: BigInt!
+  seller: Bytes!
 }
 
 type RegionalAdminCreated @entity {

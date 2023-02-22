@@ -1,0 +1,618 @@
+[
+    {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "regionalAdmin",
+                "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "district",
+                "type": "string"
+            }
+        ],
+        "name": "AdminAlreadyRegisteredForDistrict",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "district",
+                "type": "string"
+            }
+        ],
+        "name": "MustBeRegionalAdminAndFromSameDistrict",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "MustBeUserWhoMadeTheInitialRequest",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "NoProceeds",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "NotAdmin",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "NotApprovedByOwner",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "NotOwner",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "PriceMustBeAboveZero",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "surveyNumber",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+            }
+        ],
+        "name": "PriceNotMet",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            }
+        ],
+        "name": "PropertyAlreadyRegistered",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            }
+        ],
+        "name": "PropertyIsNotRegistered",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "PropertyNotAvailable",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "RejectRequestBeforeChangingAvailability",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "TransferFailed",
+        "type": "error"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "buyer",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "surveyNumber",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "marketValue",
+                "type": "uint256"
+            }
+        ],
+        "name": "PropertyBought",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "surveyNumber",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "seller",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "isAvailable",
+                "type": "bool"
+            }
+        ],
+        "name": "PropertyChangedAvailability",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "state",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "district",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "neighborhood",
+                "type": "string"
+            },
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "surveyNumber",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "seller",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "marketValue",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "isAvailable",
+                "type": "bool"
+            },
+            {
+                "indexed": false,
+                "internalType": "enum TitleRegistry.ReqStatus",
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "name": "PropertyListed",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "surveyNumber",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "seller",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "enum TitleRegistry.ReqStatus",
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "name": "PropertyRequestStatusChanged",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "regionalAdmin",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "district",
+                "type": "string"
+            }
+        ],
+        "name": "RegionalAdminCreated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "surveyNumber",
+                "type": "uint256"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "seller",
+                "type": "address"
+            }
+        ],
+        "name": "TransactionCanceled",
+        "type": "event"
+    },
+    {
+        "stateMutability": "payable",
+        "type": "fallback"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_regionalAdmin",
+                "type": "address"
+            },
+            {
+                "internalType": "string",
+                "name": "_district",
+                "type": "string"
+            }
+        ],
+        "name": "addRegionalAdmin",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "surveyNumber",
+                "type": "uint256"
+            }
+        ],
+        "name": "buyProperty",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "surveyNumber",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            }
+        ],
+        "name": "findId",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "seller",
+                "type": "address"
+            }
+        ],
+        "name": "getProceeds",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "surveyNumber",
+                "type": "uint256"
+            }
+        ],
+        "name": "landInfoOwner",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            },
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "enum TitleRegistry.ReqStatus",
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "surveyNumber",
+                "type": "uint256"
+            }
+        ],
+        "name": "landInfoUser",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            },
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "enum TitleRegistry.ReqStatus",
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "surveyNumber",
+                "type": "uint256"
+            }
+        ],
+        "name": "makeAvailable",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "surveyNumber",
+                "type": "uint256"
+            }
+        ],
+        "name": "makeUnavailable",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "surveyNumber",
+                "type": "uint256"
+            },
+            {
+                "internalType": "enum TitleRegistry.ReqStatus",
+                "name": "status",
+                "type": "uint8"
+            }
+        ],
+        "name": "processRequest",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_state",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_district",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_neighborhood",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_surveyNumber",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address payable",
+                "name": "_ownerAddress",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_marketValue",
+                "type": "uint256"
+            }
+        ],
+        "name": "registerTitle",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "surveyNumber",
+                "type": "uint256"
+            }
+        ],
+        "name": "requestToLandOwner",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_surveyNumber",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_marketValue",
+                "type": "uint256"
+            }
+        ],
+        "name": "updateTitleRegistry",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "viewAssets",
+        "outputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "",
+                "type": "uint256[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "property",
+                "type": "uint256"
+            }
+        ],
+        "name": "viewRequest",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "withDrawProceeds",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "stateMutability": "payable",
+        "type": "receive"
+    }
+]
