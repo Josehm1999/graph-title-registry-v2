@@ -1,12 +1,3 @@
-type AvailableProperty @entity {
-  id: ID!
-  surveyNumber: BigInt!
-  seller: Bytes!
-  buyer: Bytes!
-  marketValue: BigInt
-  ReqStatus: Int!
-}
-
 type PropertyListed @entity {
   id: ID!
   state: String!
@@ -17,36 +8,19 @@ type PropertyListed @entity {
   marketValue: BigInt!
   isAvailable: Boolean!
   ReqStatus: Int!
+  updatedAt: BigInt!
 }
 
 type PropertyBought @entity {
   id: ID!
+  seller: Bytes!
   buyer: Bytes!
   surveyNumber: BigInt!
   marketValue: BigInt!
+  updatedAt: BigInt!
 }
 
-type PropertyRequestStatusChanged @entity {
-  id: ID!
-  surveyNumber: BigInt!
-  seller: Bytes!
-  ReqStatus: Int!
-}
-
-type PropertyChangedAvailability @entity {
-  id: ID!
-  surveyNumber: BigInt!
-  seller: Bytes!
-  isAvailable: Boolean!
-}
-
-type TransactionCanceled @entity {
-  id: ID!
-  surveyNumber: BigInt!
-  seller: Bytes!
-}
-
-type RegionalAdminCreated @entity {
+type RegionalAdmin @entity {
   id: ID!
   regionalAdmin: Bytes!
   district: String!
