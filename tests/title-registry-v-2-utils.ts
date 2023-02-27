@@ -4,10 +4,8 @@ import {
   PropertyBought,
   PropertyChangedAvailability,
   PropertyListed,
-  PropertyStatusChanged,
   RegionalAdminCreated,
   TransactionCanceled,
-  TransferSuccess
 } from "../generated/titleRegistryV2/titleRegistryV2"
 
 export function createPropertyBoughtEvent(

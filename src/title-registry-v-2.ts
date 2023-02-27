@@ -71,6 +71,9 @@ export function handlePropertyListed(event: PropertyListedEvent): void {
   property_listed.neighborhood = event.params.neighborhood;
   property_listed.marketValue = event.params.marketValue;
   property_listed.isAvailable = event.params.isAvailable;
+  property_listed.requester = event.params.requester;
+  property_listed.ReqStatus = event.params.param8;
+  property_listed.updatedAt = event.block.timestamp;
   property_listed.save();
 }
 
