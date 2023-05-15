@@ -7,7 +7,6 @@ import {
   afterAll
 } from "matchstick-as/assembly/index"
 import { Address, BigInt } from "@graphprotocol/graph-ts"
-import { ExampleEntity } from "../generated/schema"
 import { PropertyBought } from "../generated/titleRegistryV2/titleRegistryV2"
 import { handlePropertyBought } from "../src/title-registry-v-2"
 import { createPropertyBoughtEvent } from "./title-registry-v-2-utils"

@@ -25,4 +25,5 @@ type RegionalAdmin @entity {
   id: ID!
   regionalAdmin: Bytes!
   district: String!
+  updatedAt: BigInt!
 }

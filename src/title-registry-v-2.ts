@@ -1,4 +1,4 @@
-import { Address, BigInt } from '@graphprotocol/graph-ts';
+import { Address, BigInt, Bytes } from '@graphprotocol/graph-ts';
 import {
   PropertyBought as PropertyBoughtEvent,
   PropertyChangedAvailability as PropertyChangedAvailabilityEvent,
@@ -35,11 +35,40 @@ export function handlePropertyBought(event: PropertyBoughtEvent): void {
   property_bought.updatedAt = event.block.timestamp;
   property_bought.save();
 
-  property_listed!.seller = event.params.buyer;
-  property_listed!.ReqStatus = 0;
-  property_listed!.isAvailable = false;
-  property_listed!.updatedAt = event.block.timestamp;
-  property_listed!.save();
+  if (property_listed) {
+    property_listed.seller = event.params.buyer;
+    property_listed.ReqStatus = 0;
+    property_listed.requester = Bytes.fromHexString(
+      '0x0000000000000000000000000000000000000000'
+    );
+    property_listed.isAvailable = false;
+    property_listed.updatedAt = event.block.timestamp;
+    property_listed.save();
+  }
+
+  let bought_property = PropertyBought.load(
+    getIdFromEventParams(event.params.surveyNumber, event.params.seller)
+  );
+
+  if (bought_property) {
+    let property_new_listing = PropertyListed.load(
+      getIdFromEventParams(
+        event.params.surveyNumber,
+        Address.fromBytes(bought_property.seller)
+      )
+    );
+
+    if (property_new_listing) {
+      property_new_listing.seller = event.params.buyer;
+      property_new_listing.ReqStatus = 0;
+      property_new_listing.requester = Bytes.fromHexString(
+        '0x0000000000000000000000000000000000000000'
+      );
+      property_new_listing.isAvailable = false;
+      property_new_listing.updatedAt = event.block.timestamp;
+      property_new_listing.save();
+    }
+  }
 }
 
 export function handlePropertyChangedAvailability(
@@ -49,8 +78,28 @@ export function handlePropertyChangedAvailability(
     getIdFromEventParams(event.params.surveyNumber, event.params.seller)
   );
 
-  property_listed!.isAvailable = event.params.isAvailable;
-  property_listed!.save();
+  if (property_listed) {
+    property_listed.isAvailable = event.params.isAvailable;
+    property_listed.save();
+  }
+
+  let bought_property = PropertyBought.load(
+    getIdFromEventParams(event.params.surveyNumber, event.params.seller)
+  );
+
+  if (bought_property) {
+    let property_new_listing = PropertyListed.load(
+      getIdFromEventParams(
+        event.params.surveyNumber,
+        Address.fromBytes(bought_property.seller)
+      )
+    );
+
+    if (property_new_listing) {
+      property_new_listing.isAvailable = event.params.isAvailable;
+      property_new_listing.save();
+    }
+  }
 }
 
 export function handlePropertyListed(event: PropertyListedEvent): void {
@@ -84,8 +133,44 @@ export function handlePropertyStatusChanged(
     getIdFromEventParams(event.params.surveyNumber, event.params.seller)
   );
 
-  propertyListed!.ReqStatus = event.params.param2;
-  propertyListed!.save();
+  if (propertyListed) {
+    if (event.params.param2 === 1) {
+      propertyListed.ReqStatus = event.params.param2;
+      propertyListed.requester = event.address;
+      propertyListed.save();
+    }
+    propertyListed.ReqStatus = event.params.param2;
+    propertyListed.requester = Bytes.fromHexString(
+      '0x0000000000000000000000000000000000000000'
+    );
+    propertyListed.save();
+  }
+
+  let bought_property = PropertyBought.load(
+    getIdFromEventParams(event.params.surveyNumber, event.params.seller)
+  );
+
+  if (bought_property) {
+    let property_new_listing = PropertyListed.load(
+      getIdFromEventParams(
+        event.params.surveyNumber,
+        Address.fromBytes(bought_property.seller)
+      )
+    );
+
+    if (property_new_listing) {
+      if (event.params.param2 === 1) {
+        property_new_listing.ReqStatus = event.params.param2;
+        property_new_listing.requester = event.address;
+        property_new_listing.save();
+      }
+      property_new_listing.ReqStatus = event.params.param2;
+      property_new_listing.requester = Bytes.fromHexString(
+        '0x0000000000000000000000000000000000000000'
+      );
+      property_new_listing.save();
+    }
+  }
 }
 
 export function handleRegionalAdminCreated(
@@ -109,6 +194,7 @@ export function handleRegionalAdminCreated(
 
   new_regional_admin.district = event.params.district;
   new_regional_admin.regionalAdmin = event.params.regionalAdmin;
+  new_regional_admin.updatedAt = event.block.timestamp;
   new_regional_admin.save();
 }
 
@@ -118,8 +204,35 @@ export function handleTransactionCanceled(
   let property_listed = PropertyListed.load(
     getIdFromEventParams(event.params.surveyNumber, event.params.seller)
   );
-  property_listed!.ReqStatus = 0;
-  property_listed!.save();
+
+  if (property_listed) {
+    property_listed.ReqStatus = 0;
+    property_listed.requester = Bytes.fromHexString(
+      '0x0000000000000000000000000000000000000000'
+    );
+    property_listed.save();
+  }
+
+  let bought_property = PropertyBought.load(
+    getIdFromEventParams(event.params.surveyNumber, event.params.seller)
+  );
+
+  if (bought_property) {
+    let property_new_listing = PropertyListed.load(
+      getIdFromEventParams(
+        event.params.surveyNumber,
+        Address.fromBytes(bought_property.seller)
+      )
+    );
+
+    if (property_new_listing) {
+      property_new_listing.ReqStatus = 0;
+      property_new_listing.requester = Bytes.fromHexString(
+        '0x0000000000000000000000000000000000000000'
+      );
+      property_new_listing.save();
+    }
+  }
 }
 
 function getIdFromEventParams(surveyNumber: BigInt, buyer: Address): string {
